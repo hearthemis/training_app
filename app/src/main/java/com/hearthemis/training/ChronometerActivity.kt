@@ -31,7 +31,7 @@ class ChronometerActivity : AppCompatActivity() {
         val buttonPrecision = findViewById<Button>(R.id.button_precision)
         val buttonReset = findViewById<Button>(R.id.button_reset)
 
-        // --- CONFIGURATION DU SPINNER ---
+        // Configuration du spinner pour la sélection du temps pour le standard
         val standardSpinner = findViewById<Spinner>(R.id.standard_spinner)
         val durations = arrayOf("150 secondes", "20 secondes", "10 secondes")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, durations)
@@ -50,15 +50,13 @@ class ChronometerActivity : AppCompatActivity() {
         var pauseOffset: Long = 0
         var isWorking = false
 
-        // --- GESTION DES MODES ---
+        // Gestion des modes
         buttonStandard.setOnClickListener {
             currentMode = TrainingMode.STANDARD
             Toast.makeText(this, "Standard ($standardLimit s) activé", Toast.LENGTH_SHORT).show()
         }
 
-
-        // --- GESTION DES MODES ---
-
+        // Ancien listener pour le bouton pour le mode standard
 //        buttonStandard.setOnClickListener {
 //            currentMode = TrainingMode.STANDARD
 //            Toast.makeText(this, "Mode Standard activé", Toast.LENGTH_SHORT).show()
@@ -75,7 +73,7 @@ class ChronometerActivity : AppCompatActivity() {
             Toast.makeText(this, "Mode Précision activé", Toast.LENGTH_SHORT).show()
         }
 
-        // --- LOGIQUE DU CHRONOMÈTRE ---
+        // Logique du chronomètre
 
         metre.setOnChronometerTickListener { chrono ->
             val elapsedMillis = SystemClock.elapsedRealtime() - chrono.base
@@ -122,8 +120,9 @@ class ChronometerActivity : AppCompatActivity() {
                     // Règle Standard : 7s préparation (Rouge) + Temps de tir (Vert)
                     val prepTime = 7L
                     val totalTime = prepTime + standardLimit
-
-                    if (elapsedSeconds < prepTime) {
+                    if (elapsedSeconds < 60) {
+                        rootLayout.setBackgroundColor(getColor(android.R.color.white))
+                    } else if (elapsedSeconds < prepTime) {
                         rootLayout.setBackgroundColor(getColor(android.R.color.holo_red_light))
                     } else if (elapsedSeconds < totalTime) {
                         rootLayout.setBackgroundColor(getColor(android.R.color.holo_green_light))
@@ -140,7 +139,7 @@ class ChronometerActivity : AppCompatActivity() {
             }
         }
 
-        // --- BOUTON START / STOP ---
+        // Bouton START / STOP
         btnStartStop.setOnClickListener {
             if (!isWorking) {
                 metre.base = SystemClock.elapsedRealtime() - pauseOffset
@@ -155,7 +154,7 @@ class ChronometerActivity : AppCompatActivity() {
             }
         }
 
-        // --- BOUTON RESET ---
+        // Bouton RESET
         buttonReset.setOnClickListener {
             metre.stop()
             metre.base = SystemClock.elapsedRealtime()
@@ -163,7 +162,7 @@ class ChronometerActivity : AppCompatActivity() {
             isWorking = false
             btnStartStop.text = "START"
             rootLayout.setBackgroundColor(getColor(android.R.color.white))
-            currentMode = TrainingMode.FREE // Optionnel : repasser en mode libre au reset
+            currentMode = TrainingMode.FREE // Repasse en mode libre au reset
         }
     }
 }
