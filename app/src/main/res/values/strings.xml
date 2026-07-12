@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Training</string>
+    <string name="stop">Stop Timer</string>
+    <string name="start">Start Timer</string>
+    <string name="reset">Reset Timer</string>
+    <string name="pause">Pause Timer</string>
+    <string name="resume">Resume Timer</string>
+</resources>
